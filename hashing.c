@@ -6,14 +6,15 @@
 /*   By: mhuszar <mhuszar@student.42vienna.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 21:39:40 by mhuszar           #+#    #+#             */
-/*   Updated: 2025/04/12 00:27:59 by mhuszar          ###   ########.fr       */
+/*   Updated: 2025/04/12 00:49:23 by mhuszar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stddef.h>
 #include <stdint.h>
 
-uint32_t	scramble(uint32_t num)
+static inline uint32_t __attribute__ ((always_inline))
+	scramble(uint32_t num)
 {
 	num *= 0xcc9e2d51;
 	num = (num << 15) | (num >> 17);
@@ -21,7 +22,8 @@ uint32_t	scramble(uint32_t num)
 	return (num);
 }
 
-uint32_t	process_string(char *key, uint32_t chunk, size_t len, uint32_t seed)
+static inline uint32_t __attribute__ ((always_inline))
+	process_string(char *key, uint32_t chunk, size_t len, uint32_t seed)
 {
 	size_t	rest;
 
@@ -50,7 +52,8 @@ uint32_t	process_string(char *key, uint32_t chunk, size_t len, uint32_t seed)
 	return (seed);
 }
 
-uint32_t	murmur3_hash(char *key, size_t len, uint32_t seed)
+static inline uint32_t __attribute__ ((always_inline))
+	murmur3_hash(char *key, size_t len, uint32_t seed)
 {
 	uint32_t	hash;
 
@@ -67,5 +70,9 @@ uint32_t	murmur3_hash(char *key, size_t len, uint32_t seed)
 
 // int	main(void)
 // {
-// 	printf("%u\n", murmur3_hash("lel", 3, 31));
+// 	char hehe[3];
+// 	hehe[0] = 'l';
+// 	hehe[1] = 'e';
+// 	hehe[2] = 'l';
+// 	printf("%u\n", murmur3_hash(hehe, 3, 31));
 // }
