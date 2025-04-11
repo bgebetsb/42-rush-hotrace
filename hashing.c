@@ -6,7 +6,7 @@
 /*   By: mhuszar <mhuszar@student.42vienna.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 21:39:40 by mhuszar           #+#    #+#             */
-/*   Updated: 2025/04/12 00:00:33 by mhuszar          ###   ########.fr       */
+/*   Updated: 2025/04/12 00:16:39 by mhuszar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,11 +23,9 @@ uint32_t scramble(uint32_t num)
 
 uint32_t process_string(char *key, uint32_t chunk, size_t len, uint32_t seed)
 {
-    size_t ctr;
     size_t rest;
 
-    ctr = len >> 2;
-    while (ctr)
+    while ((len & 3) >= 4)
     {
         __asm__ __volatile__(
             "rep movsb"
@@ -40,18 +38,16 @@ uint32_t process_string(char *key, uint32_t chunk, size_t len, uint32_t seed)
         chunk += 1;
         seed = (seed << 13) | (seed >> 19);
         seed = seed * 5 + 0xe6546b64;
-        ctr--;
+        len = len - 4;
     }
-    ctr = len & 3;
     rest = 0;
-    while (ctr)
+    while (len)
     {
         rest <<= 8;
-        rest |= key[ctr - 1];
-        ctr--;
+        rest |= key[len - 1];
+        len--;
     }
-    seed ^= scramble(rest);
-    return (seed);
+    return (seed ^= scramble(rest), seed);
 }
 
 uint32_t murmur3_hash(char *key, size_t len, uint32_t seed)
