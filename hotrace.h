@@ -41,7 +41,7 @@ uint32_t 	fnv1a_hash(const char* s);
 uint32_t	djb2a_hash(const char *s);
 
 t_hashmap	*create_hashmap(void);
-char		*hashmap_get_value(const t_hashmap *hashmap, const char *key);
+char		*hashmap_get_value(t_hashmap *hashmap, const char *key);
 bool		hashmap_insert(t_hashmap *hashmap, char *key, char *value);
 
 #endif

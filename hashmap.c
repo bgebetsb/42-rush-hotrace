@@ -16,7 +16,7 @@
 #include <stdbool.h>
 
 static void	insert_at_pos(t_hashmap *hashmap, t_list *node, size_t pos);
-static char	*list_lookup_hash(const t_list *list, const char *key, size_t hash);
+static char	*list_lookup_hash(t_list *list, const char *key, size_t hash);
 
 bool	hashmap_insert(t_hashmap *hashmap, char *key, char *value)
 {
@@ -30,12 +30,12 @@ bool	hashmap_insert(t_hashmap *hashmap, char *key, char *value)
 	hashmap_node->main_hash = main_hash;
 	hashmap_node->key = key;
 	hashmap_node->value = value;
-	hashmap_node->collision_hash = djb2a_hash(key);
+	hashmap_node->collision_hash = SIZE_MAX;
 	insert_at_pos(hashmap, hashmap_node, main_hash % HASHMAP_SIZE);
 	return (true);
 }
 
-char	*hashmap_get_value(const t_hashmap *hashmap, const char *key)
+char	*hashmap_get_value(t_hashmap *hashmap, const char *key)
 {
 	size_t			main_hash;
 	const t_hashmap	*cur;
@@ -64,9 +64,9 @@ static void	insert_at_pos(t_hashmap *hashmap, t_list *node, size_t pos)
 	}
 }
 
-static char	*list_lookup_hash(const t_list *list, const char *key, size_t hash)
+static char	*list_lookup_hash(t_list *list, const char *key, size_t hash)
 {
-	const t_list	*cur;
+	t_list	*cur;
 	size_t			collision_hash;
 
 	cur = list;
@@ -75,8 +75,10 @@ static char	*list_lookup_hash(const t_list *list, const char *key, size_t hash)
 	{
 		if (cur->main_hash == hash)
 		{
-			if (collision_hash == SIZE_MAX && cur->collision_hash != SIZE_MAX)
+			if (collision_hash == SIZE_MAX)
 				collision_hash = djb2a_hash(key);
+			if (cur->collision_hash == SIZE_MAX)
+				cur->collision_hash = djb2a_hash(cur->key);
 			if (collision_hash == cur->collision_hash)
 				return (cur->value);
 		}
