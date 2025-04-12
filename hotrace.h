@@ -19,18 +19,19 @@
 
 # define HASHMAP_SIZE 4096
 
-typedef struct s_list
+typedef struct s_tree
 {
 	size_t		main_hash;
 	size_t		collision_hash;
 	char		*key;
 	char		*value;
-	void		*next;
-}	t_list;
+	void		*left;
+	void		*right;
+}	t_tree;
 
 typedef struct s_hashmap
 {
-	t_list	*matches;
+	t_tree	*matches;
 	size_t	amount;
 }	t_hashmap;
 
