@@ -16,14 +16,14 @@
 #include <stdbool.h>
 
 static void	insert_at_pos(t_hashmap *hashmap, t_list *node, size_t pos);
-static char	*list_lookup_hash(t_list *list, const char *key, size_t hash);
+static char	*list_lookup_hash(t_list *list, t_line key, size_t hash);
 
-bool	hashmap_insert(t_hashmap *hashmap, char *key, char *value)
+bool	hashmap_insert(t_hashmap *hashmap, t_line key, t_line value)
 {
 	size_t	main_hash;
 	t_list	*hashmap_node;
 
-	main_hash = fnv1a_hash(key);
+	main_hash = murmur3_hash(key.raw, key.size, 31);
 	hashmap_node = ft_calloc(1, sizeof(t_list));
 	if (!hashmap_node)
 		return (false);
@@ -31,16 +31,17 @@ bool	hashmap_insert(t_hashmap *hashmap, char *key, char *value)
 	hashmap_node->key = key;
 	hashmap_node->value = value;
 	hashmap_node->collision_hash = SIZE_MAX;
-	insert_at_pos(hashmap, hashmap_node, main_hash % HASHMAP_SIZE);
+	insert_at_pos(hashmap, hashmap_node, main_hash & (HASHMAP_SIZE - 1));
 	return (true);
 }
 
-char	*hashmap_get_value(t_hashmap *hashmap, const char *key)
+char	*hashmap_get_value(t_hashmap *hashmap, t_line key)
 {
 	size_t			main_hash;
 	const t_hashmap	*cur;
 
-	main_hash = fnv1a_hash(key);
+	// main_hash = fnv1a_hash(key.raw);
+	main_hash = murmur3_hash(key.raw, key.size, 31);
 	cur = hashmap + main_hash % HASHMAP_SIZE;
 	if (!cur->amount)
 		return (NULL);
@@ -64,7 +65,7 @@ static void	insert_at_pos(t_hashmap *hashmap, t_list *node, size_t pos)
 	}
 }
 
-static char	*list_lookup_hash(t_list *list, const char *key, size_t hash)
+static char	*list_lookup_hash(t_list *list, t_line key, size_t hash)
 {
 	t_list	*cur;
 	size_t			collision_hash;
@@ -76,11 +77,11 @@ static char	*list_lookup_hash(t_list *list, const char *key, size_t hash)
 		if (cur->main_hash == hash)
 		{
 			if (collision_hash == SIZE_MAX)
-				collision_hash = djb2a_hash(key);
+				collision_hash = djb2a_hash(key.raw);
 			if (cur->collision_hash == SIZE_MAX)
-				cur->collision_hash = djb2a_hash(cur->key);
+				cur->collision_hash = djb2a_hash(cur->key.raw);
 			if (collision_hash == cur->collision_hash)
-				return (cur->value);
+				return (cur->value.raw);
 		}
 		cur = cur->next;
 	}

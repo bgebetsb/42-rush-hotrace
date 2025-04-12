@@ -51,8 +51,7 @@ static inline uint32_t __attribute__ ((always_inline))
 	return (seed);
 }
 
-static inline uint32_t __attribute__ ((always_inline))
-	murmur3_hash(char *key, size_t len, uint32_t seed)
+uint32_t	murmur3_hash(char *key, size_t len, uint32_t seed)
 {
 	uint32_t	hash;
 

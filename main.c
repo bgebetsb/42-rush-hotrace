@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/types.h>
+#include <unistd.h>
 
 static bool	parse_key_value_pairs(t_hashmap *hashmap)
 {
@@ -20,7 +21,7 @@ static bool	parse_key_value_pairs(t_hashmap *hashmap)
 			return (free(key.raw), false);
 		if (!value.size)
 			return (free(key.raw), true);
-		if (!hashmap_insert(hashmap, key.raw, value.raw))
+		if (!hashmap_insert(hashmap, key, value))
 			return (free(key.raw), free(value.raw), false);
 	}
 }
@@ -29,6 +30,8 @@ static void parse_searches(t_hashmap *hashmap)
 {
 	t_line	line;
 	char	*result;
+	char	buffer[100];
+	int		ret;
 
 	while (true)
 	{
@@ -40,11 +43,14 @@ static void parse_searches(t_hashmap *hashmap)
 			free(line.raw);
 			continue;
 		}
-		result = hashmap_get_value(hashmap, line.raw);
+		result = hashmap_get_value(hashmap, line);
 		if (!result)
-			printf("%s: not found\n", line.raw);
+			ret = snprintf(buffer, 100, "%s: not found\n", line.raw);
+			// printf("%s: not found\n", line.raw);
 		else
-			printf("%s: %s\n", line.raw, result);
+			// printf("%s: %s\n", line.raw, result);
+			ret = snprintf(buffer, 100, "%s: %s\n", line.raw, result);
+		write(1, buffer, ret);
 	}
 }
 
