@@ -14,18 +14,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include "hotrace.h"
 
 #ifndef BUFFER_SIZE
 # define BUFFER_SIZE 1024
 #endif
 
 #define EXPECTED_LINE_SIZE 64
-
-typedef struct line
-{
-	char	*raw;
-	size_t	size;
-}	t_line;
 
 static inline void	__attribute__((always_inline))
 	free_and_null(char **ptr)
@@ -112,12 +107,12 @@ t_line	get_next_line(int fd)
 			return (line.raw = NULL, line);
 		line.raw[len++] = buffer[buf_idx++];
 		if (line.raw[len - 1] == '\n')
-			break ;
+			return (line.raw[len - 1] = '\0', line.size = len - 1, line);
 	}
 	if (!len || !line.raw || buf_len < 0)
 		return (free_and_null(&line.raw), line);
 	line.raw[len] = '\0';
-	return (line.size = len + 1, line);
+	return (line.size = len, line);
 }
 
 // int	main(void)

@@ -34,6 +34,12 @@ typedef struct s_hashmap
 	size_t	amount;
 }	t_hashmap;
 
+typedef struct line
+{
+	char	*raw;
+	size_t	size;
+}	t_line;
+
 void		ft_bzero(void *s, size_t n);
 void		*ft_calloc(size_t nmemb, size_t size);
 void		*block_memset(uint64_t *s, size_t c, size_t n);
@@ -44,5 +50,7 @@ uint32_t	djb2a_hash(const char *s);
 t_hashmap	*create_hashmap(void);
 char		*hashmap_get_value(t_hashmap *hashmap, const char *key);
 bool		hashmap_insert(t_hashmap *hashmap, char *key, char *value);
+
+t_line		get_next_line(int fd);
 
 #endif
