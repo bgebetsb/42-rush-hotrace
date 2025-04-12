@@ -12,18 +12,19 @@
 
 #include "hotrace.h"
 #include <stdbool.h>
-#include <stdint.h>
 
-static void	insert_at_pos(t_hashmap *hashmap, t_list *node, size_t pos);
-t_line		list_lookup_hash(t_list *list, t_line key, size_t hash);
+static void		insert_at_pos(t_hashmap *hashmap, t_tree *node, size_t pos);
+static t_line	tree_lookup_hash(t_tree *list, t_line key, size_t hash);
+static int		compare_nodes(t_tree *a, t_tree *b);
+static void		insert_in_tree(t_tree **start, t_tree *node);
 
 bool	hashmap_insert(t_hashmap *hashmap, t_line key, t_line value)
 {
 	size_t	main_hash;
-	t_list	*hashmap_node;
+	t_tree	*hashmap_node;
 
 	main_hash = murmur3_hash(key.raw, key.size, 31);
-	hashmap_node = ft_calloc(1, sizeof(t_list));
+	hashmap_node = ft_calloc(1, sizeof(t_tree));
 	if (!hashmap_node)
 		return (false);
 	hashmap_node->main_hash = main_hash;
@@ -45,33 +46,70 @@ t_line	hashmap_get_value(t_hashmap *hashmap, t_line key)
 	cur = hashmap + main_hash % HASHMAP_SIZE;
 	if (!cur->amount)
 		return (ret.raw = NULL, ret.size = 0, ret);
-	return (list_lookup_hash(cur->matches, key, main_hash));
+	return (tree_lookup_hash(cur->matches, key, main_hash));
 }
 
-static void	insert_at_pos(t_hashmap *hashmap, t_list *node, size_t pos)
+static void	insert_at_pos(t_hashmap *hashmap, t_tree *node, size_t pos)
 {
 	t_hashmap	*item;
 
 	item = hashmap + pos;
 	item->amount++;
-	if (!item->matches)
-	{
-		item->matches = node;
-	}
-	else
-	{
-		node->next = item->matches;
-		item->matches = node;
-	}
+	insert_in_tree(&item->matches, node);
 }
 
-t_line	list_lookup_hash(t_list *list, t_line key, size_t hash)
+static void	insert_in_tree(t_tree **start, t_tree *node)
 {
-	t_list	*cur;
+	t_tree	**cur;
+	int		cmp_ret;
+
+	cur = start;
+	while (*cur)
+	{
+		cmp_ret = compare_nodes(node, *cur);
+		if (cmp_ret == 0)
+			break;
+		else if (cmp_ret == -1)
+			cur = (t_tree **)&((*cur)->left);
+		else
+			cur = (t_tree **)&((*cur)->right);
+	}
+	*cur = node;
+}
+
+
+// TODO: Could be optimized in Assembly so it uses only 1 `cmp` instruction
+inline static int __attribute__ ((always_inline))
+cmp(uint32_t a, uint32_t b)
+{
+	if (a < b)
+		return (-1);
+	if (a > b)
+		return (1);
+	return (0);
+}
+
+static int	compare_nodes(t_tree *a, t_tree *b)
+{
+	int	main_cmp;
+
+	main_cmp = cmp(a->main_hash, b->main_hash);
+	if (main_cmp != 0)
+		return (main_cmp);
+	if (a->collision_hash == SIZE_MAX)
+		a->collision_hash = djb2a_hash(a->key.raw);
+	if (b->collision_hash == SIZE_MAX)
+		b->collision_hash = djb2a_hash(b->key.raw);
+	return (cmp(a->collision_hash, b->collision_hash));
+}
+
+static t_line	tree_lookup_hash(t_tree *tree, t_line key, size_t hash)
+{
+	t_tree	*cur;
 	size_t	collision_hash;
 	t_line	ret;
 
-	cur = list;
+	cur = tree;
 	collision_hash = SIZE_MAX;
 	while (cur)
 	{
@@ -83,8 +121,15 @@ t_line	list_lookup_hash(t_list *list, t_line key, size_t hash)
 				cur->collision_hash = djb2a_hash(cur->key.raw);
 			if (collision_hash == cur->collision_hash)
 				return (cur->value);
+			else if (collision_hash < cur->collision_hash)
+				cur = cur->left;
+			else
+				cur = cur->right;
 		}
-		cur = cur->next;
+		else if (hash < cur->main_hash)
+			cur = cur->left;
+		else
+			cur = cur->right;
 	}
 	return (ret.raw = NULL, ret.size = 0, ret);
 }

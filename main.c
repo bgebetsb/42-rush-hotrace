@@ -52,7 +52,8 @@ static inline void	__attribute__((always_inline)) __attribute__((hot))
 	);
 }
 
-static inline void	__attribute__((always_inline))
+static inline void	__attribute__((always_inline)) __attribute__((hot))
+
 	print_buf(t_line str, bool found)
 {
 	char	buf[PRINTBUF_SIZE];
@@ -68,16 +69,16 @@ static inline void	__attribute__((always_inline))
 		write(1, str.raw, str.size);
 		write(1, "\n", 1);
 	}
-	else if (str.size < PRINTBUF_SIZE - 12)
+	else if (str.size < PRINTBUF_SIZE - 13)
 	{
 		move((uint8_t *)str.raw, (uint8_t *)buf, str.size);
-		move((uint8_t *)": not found\n", (uint8_t *)buf + str.size, 13);
-		write(1, buf, str.size + 12);
+		move((uint8_t *)": Not found.\n", (uint8_t *)buf + str.size, 14);
+		write(1, buf, str.size + 13);
 	}
 	else
 	{
 		write(1, str.raw, str.size);
-		write(1, ": not found\n", 1);
+		write(1, ": Not found.\n", 14);
 	}
 }
 
