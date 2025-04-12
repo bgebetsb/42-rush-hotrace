@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   hotrace.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bgebetsb <bgebetsb@student.42vienna.com>   +#+  +:+       +#+        */
+/*   By: mhuszar <mhuszar@student.42vienna.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 21:42:19 by bgebetsb          #+#    #+#             */
-/*   Updated: 2025/04/11 21:42:20 by bgebetsb         ###   ########.fr       */
+/*   Updated: 2025/04/12 18:53:15 by mhuszar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ uint32_t	djb2a_hash(const char *s);
 uint32_t	murmur3_hash(char *key, size_t len, uint32_t seed);
 
 t_hashmap	*create_hashmap(void);
-char		*hashmap_get_value(t_hashmap *hashmap, t_line key);
+t_line		hashmap_get_value(t_hashmap *hashmap, t_line key);
 bool		hashmap_insert(t_hashmap *hashmap, t_line key, t_line value);
 
 t_line		get_next_line(int fd);

@@ -3,20 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   hashmap.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bgebetsb <bgebetsb@student.42vienna.com>   +#+  +:+       +#+        */
+/*   By: mhuszar <mhuszar@student.42vienna.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 21:42:02 by bgebetsb          #+#    #+#             */
-/*   Updated: 2025/04/11 21:45:43 by bgebetsb         ###   ########.fr       */
+/*   Updated: 2025/04/12 18:56:16 by mhuszar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "hotrace.h"
-#include <stdint.h>
-#include <stdint.h>
 #include <stdbool.h>
+#include <stdint.h>
 
 static void	insert_at_pos(t_hashmap *hashmap, t_list *node, size_t pos);
-static char	*list_lookup_hash(t_list *list, t_line key, size_t hash);
+t_line		list_lookup_hash(t_list *list, t_line key, size_t hash);
 
 bool	hashmap_insert(t_hashmap *hashmap, t_line key, t_line value)
 {
@@ -35,16 +34,17 @@ bool	hashmap_insert(t_hashmap *hashmap, t_line key, t_line value)
 	return (true);
 }
 
-char	*hashmap_get_value(t_hashmap *hashmap, t_line key)
+t_line	hashmap_get_value(t_hashmap *hashmap, t_line key)
 {
 	size_t			main_hash;
 	const t_hashmap	*cur;
+	t_line			ret;
 
 	// main_hash = fnv1a_hash(key.raw);
 	main_hash = murmur3_hash(key.raw, key.size, 31);
 	cur = hashmap + main_hash % HASHMAP_SIZE;
 	if (!cur->amount)
-		return (NULL);
+		return (ret.raw = NULL, ret.size = 0, ret);
 	return (list_lookup_hash(cur->matches, key, main_hash));
 }
 
@@ -65,10 +65,11 @@ static void	insert_at_pos(t_hashmap *hashmap, t_list *node, size_t pos)
 	}
 }
 
-static char	*list_lookup_hash(t_list *list, t_line key, size_t hash)
+t_line	list_lookup_hash(t_list *list, t_line key, size_t hash)
 {
 	t_list	*cur;
-	size_t			collision_hash;
+	size_t	collision_hash;
+	t_line	ret;
 
 	cur = list;
 	collision_hash = SIZE_MAX;
@@ -81,9 +82,9 @@ static char	*list_lookup_hash(t_list *list, t_line key, size_t hash)
 			if (cur->collision_hash == SIZE_MAX)
 				cur->collision_hash = djb2a_hash(cur->key.raw);
 			if (collision_hash == cur->collision_hash)
-				return (cur->value.raw);
+				return (cur->value);
 		}
 		cur = cur->next;
 	}
-	return (NULL);
+	return (ret.raw = NULL, ret.size = 0, ret);
 }
