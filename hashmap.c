@@ -13,7 +13,9 @@
 #include "hotrace.h"
 #include <limits.h>
 #include <stdbool.h>
+#include <stdint.h>
 #include <stdlib.h>
+#include <sys/types.h>
 
 static void		insert_at_pos(t_hashmap *hashmap, t_tree *node, size_t pos);
 static t_line	tree_lookup_hash(t_tree *list, t_line key, size_t hash);
@@ -32,7 +34,6 @@ bool	hashmap_insert(t_hashmap *hashmap, t_line key, t_line value)
 	hashmap_node->main_hash = main_hash;
 	hashmap_node->key = key;
 	hashmap_node->value = value;
-	hashmap_node->collision_hash = SIZE_MAX;
 	insert_at_pos(hashmap, hashmap_node, main_hash % HASHMAP_SIZE);
 	return (true);
 }
@@ -76,7 +77,7 @@ static void	insert_in_tree(t_tree **start, t_tree *node)
 		if (cmp_ret == 0)
 			break;
 		parent = *cur;
-		if (cmp_ret == -1)
+		if (cmp_ret < 0)
 		{
 			cur = (t_tree **)&((*cur)->left);
 			direction = LEFT;
@@ -104,6 +105,8 @@ cmp(uint32_t a, uint32_t b)
 	return (0);
 }
 
+#include <string.h>
+
 static int	compare_nodes(t_tree *a, t_tree *b)
 {
 	int	main_cmp;
@@ -111,32 +114,23 @@ static int	compare_nodes(t_tree *a, t_tree *b)
 	main_cmp = cmp(a->main_hash, b->main_hash);
 	if (main_cmp != 0)
 		return (main_cmp);
-	if (a->collision_hash == SIZE_MAX)
-		a->collision_hash = djb2a_hash(a->key.raw);
-	if (b->collision_hash == SIZE_MAX)
-		b->collision_hash = djb2a_hash(b->key.raw);
-	return (cmp(a->collision_hash, b->collision_hash));
+	return (strcmp(a->key.raw, b->key.raw));
 }
 
 static t_line	tree_lookup_hash(t_tree *tree, t_line key, size_t hash)
 {
 	t_tree	*cur;
-	size_t	collision_hash;
 	t_line	ret;
 
 	cur = tree;
-	collision_hash = SIZE_MAX;
 	while (cur)
 	{
 		if (cur->main_hash == hash)
 		{
-			if (collision_hash == SIZE_MAX)
-				collision_hash = djb2a_hash(key.raw);
-			if (cur->collision_hash == SIZE_MAX)
-				cur->collision_hash = djb2a_hash(cur->key.raw);
-			if (collision_hash == cur->collision_hash)
+			int diff = strcmp(key.raw, cur->key.raw);
+			if (diff == 0)
 				return (cur->value);
-			else if (collision_hash < cur->collision_hash)
+			else if (diff < 0)
 				cur = cur->left;
 			else
 				cur = cur->right;

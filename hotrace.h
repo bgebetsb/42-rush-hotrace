@@ -34,7 +34,6 @@ typedef enum	e_directions
 typedef struct s_tree
 {
 	size_t			main_hash;
-	size_t			collision_hash;
 	t_line			key;
 	t_line			value;
 	struct s_tree	*parent;
