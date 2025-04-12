@@ -6,7 +6,7 @@
 /*   By: mhuszar <mhuszar@student.42vienna.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 21:39:40 by mhuszar           #+#    #+#             */
-/*   Updated: 2025/04/12 15:26:44 by mhuszar          ###   ########.fr       */
+/*   Updated: 2025/04/13 01:03:27 by mhuszar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,6 @@ static inline uint32_t __attribute__ ((always_inline))
 			: "S"(key), "D"(&chunk), "c"(4)
 			: "memory");
 		seed ^= scramble(chunk);
-		key += 4;
 		seed = (seed << 13) | (seed >> 19);
 		seed = seed * 5 + 0xe6546b64;
 		len = len - 4;
