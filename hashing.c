@@ -6,7 +6,7 @@
 /*   By: mhuszar <mhuszar@student.42vienna.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 21:39:40 by mhuszar           #+#    #+#             */
-/*   Updated: 2025/04/12 00:49:23 by mhuszar          ###   ########.fr       */
+/*   Updated: 2025/04/12 11:34:38 by mhuszar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ static inline uint32_t __attribute__ ((always_inline))
 {
 	size_t	rest;
 
-	while ((len & 3) >= 4)
+	while ((len & ~3) >= 4)
 	{
 		__asm__ (
 			"rep movsb"
@@ -36,7 +36,6 @@ static inline uint32_t __attribute__ ((always_inline))
 			: "memory");
 		seed ^= scramble(chunk);
 		key += 4;
-		chunk += 1;
 		seed = (seed << 13) | (seed >> 19);
 		seed = seed * 5 + 0xe6546b64;
 		len = len - 4;
