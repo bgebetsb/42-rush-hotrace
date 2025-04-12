@@ -17,22 +17,30 @@
 # include <stdbool.h>
 # include <stdint.h>
 
-# define HASHMAP_SIZE 65536
+# define HASHMAP_SIZE 262144
 
-typedef struct line
+typedef struct s_line
 {
 	char	*raw;
 	size_t	size;
 }	t_line;
 
+typedef enum	e_directions
+{
+	LEFT = 0,
+	RIGHT = 1,
+}	t_directions;
+
 typedef struct s_tree
 {
-	size_t		main_hash;
-	size_t		collision_hash;
-	t_line		key;
-	t_line		value;
-	void		*left;
-	void		*right;
+	size_t			main_hash;
+	size_t			collision_hash;
+	t_line			key;
+	t_line			value;
+	struct s_tree	*parent;
+	t_directions	parent_direction;
+	void			*left;
+	void			*right;
 }	t_tree;
 
 typedef struct s_hashmap
@@ -52,6 +60,8 @@ uint32_t	murmur3_hash(char *key, size_t len, uint32_t seed);
 t_hashmap	*create_hashmap(void);
 t_line		hashmap_get_value(t_hashmap *hashmap, t_line key);
 bool		hashmap_insert(t_hashmap *hashmap, t_line key, t_line value);
+void		free_tree(t_tree **start);
+void		free_hashmap(t_hashmap **hashmap);
 
 t_line		get_next_line(int fd);
 

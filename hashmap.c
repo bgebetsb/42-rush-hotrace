@@ -11,7 +11,9 @@
 /* ************************************************************************** */
 
 #include "hotrace.h"
+#include <limits.h>
 #include <stdbool.h>
+#include <stdlib.h>
 
 static void		insert_at_pos(t_hashmap *hashmap, t_tree *node, size_t pos);
 static t_line	tree_lookup_hash(t_tree *list, t_line key, size_t hash);
@@ -31,7 +33,7 @@ bool	hashmap_insert(t_hashmap *hashmap, t_line key, t_line value)
 	hashmap_node->key = key;
 	hashmap_node->value = value;
 	hashmap_node->collision_hash = SIZE_MAX;
-	insert_at_pos(hashmap, hashmap_node, main_hash & (HASHMAP_SIZE - 1));
+	insert_at_pos(hashmap, hashmap_node, main_hash % HASHMAP_SIZE);
 	return (true);
 }
 
@@ -60,20 +62,33 @@ static void	insert_at_pos(t_hashmap *hashmap, t_tree *node, size_t pos)
 
 static void	insert_in_tree(t_tree **start, t_tree *node)
 {
-	t_tree	**cur;
-	int		cmp_ret;
+	t_tree			**cur;
+	t_tree			*parent;
+	int				cmp_ret;
+	t_directions	direction;
 
 	cur = start;
+	parent = NULL;
+	direction = LEFT;
 	while (*cur)
 	{
 		cmp_ret = compare_nodes(node, *cur);
 		if (cmp_ret == 0)
 			break;
-		else if (cmp_ret == -1)
+		parent = *cur;
+		if (cmp_ret == -1)
+		{
 			cur = (t_tree **)&((*cur)->left);
+			direction = LEFT;
+		}
 		else
+		{
 			cur = (t_tree **)&((*cur)->right);
+			direction = RIGHT;
+		}
 	}
+	node->parent = parent;
+	node->parent_direction = direction;
 	*cur = node;
 }
 
@@ -132,4 +147,53 @@ static t_line	tree_lookup_hash(t_tree *tree, t_line key, size_t hash)
 			cur = cur->right;
 	}
 	return (ret.raw = NULL, ret.size = 0, ret);
+}
+
+#include <stdio.h>
+void	free_tree(t_tree **start)
+{
+	t_tree	*cur;
+	t_tree	*tmp;
+
+	cur = *start;
+	while (cur)
+	{
+		if (cur->left)
+			cur = cur->left;
+		else if (cur->right)
+			cur = cur->right;
+		else
+		{
+			if (cur->parent)
+			{
+				if (cur->parent_direction == LEFT)
+					cur->parent->left = NULL;
+				else
+					cur->parent->right = NULL;
+			}
+			tmp = cur->parent;
+			free(cur->key.raw);
+			free(cur->value.raw);
+			free(cur);
+			cur = tmp;
+		}
+	}
+	*start = NULL;
+}
+
+void	free_hashmap(t_hashmap **hashmap)
+{
+	size_t	i;
+	t_tree	*tree;
+
+	i = 0;
+	while (i < HASHMAP_SIZE)
+	{
+		tree = (*hashmap)[i].matches;
+		if (tree && (*hashmap)[i].amount)
+			free_tree(&tree);
+		i++;
+	}
+	free(*hashmap);
+	*hashmap = NULL;
 }
