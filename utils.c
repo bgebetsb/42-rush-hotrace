@@ -11,6 +11,8 @@
 /* ************************************************************************** */
 
 #include <stdlib.h>
+#include <stdint.h>
+#include <stddef.h>
 
 void	ft_bzero(void *s, size_t n)
 {
@@ -30,6 +32,18 @@ void	ft_bzero(void *s, size_t n)
 		*cur_char = 0;
 		++cur_char;
 	}
+}
+
+
+void    *block_memset(uint64_t *s, size_t c, size_t n)
+{
+    __asm__ volatile (
+        "rep stosq"
+        :
+        : "c"(n), "D"(s), "a"(c)
+        : "memory"
+    );
+    return (s);
 }
 
 void	*ft_calloc(size_t nmemb, size_t size)

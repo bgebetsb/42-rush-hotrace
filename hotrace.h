@@ -36,6 +36,7 @@ typedef struct s_hashmap
 
 void		ft_bzero(void *s, size_t n);
 void		*ft_calloc(size_t nmemb, size_t size);
+void		*block_memset(uint64_t *s, size_t c, size_t n);
 
 uint32_t 	fnv1a_hash(const char* s);
 uint32_t	djb2a_hash(const char *s);
