@@ -6,7 +6,7 @@
 /*   By: mhuszar <mhuszar@student.42vienna.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 18:34:57 by mhuszar           #+#    #+#             */
-/*   Updated: 2025/04/12 19:00:38 by mhuszar          ###   ########.fr       */
+/*   Updated: 2025/04/12 19:08:42 by mhuszar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ static bool	parse_key_value_pairs(t_hashmap *hashmap)
 		key = get_next_line(0);
 		if (!key.raw)
 			return (false);
-		if (!key.size) 
+		if (!key.size)
 			return (true);
 		value = get_next_line(0);
 		if (!value.raw)
@@ -41,20 +41,21 @@ static bool	parse_key_value_pairs(t_hashmap *hashmap)
 	}
 }
 
-static inline void __attribute__ ((always_inline)) __attribute__ ((hot))
+static inline void	__attribute__((always_inline)) __attribute__((hot))
 	move(uint8_t *src, uint8_t *dest, size_t bytes)
 {
-	__asm__ (
+	__asm__ volatile (
 		"rep movsb"
 		:
 		: "S"(src), "D"(dest), "c"(bytes)
-		: "memory");
+		: "memory"
+	);
 }
 
-static inline void __attribute__ ((always_inline))
+static inline void	__attribute__((always_inline))
 	print_buf(t_line str, bool found)
 {
-	char buf[PRINTBUF_SIZE];
+	char	buf[PRINTBUF_SIZE];
 
 	if (__builtin_expect(found && str.size < PRINTBUF_SIZE, 1))
 	{
@@ -80,31 +81,26 @@ static inline void __attribute__ ((always_inline))
 	}
 }
 
-static void parse_searches(t_hashmap *hashmap)
+static void	parse_searches(t_hashmap *hashmap)
 {
 	t_line	line;
 	t_line	result;
-	// char	buffer[100];
-	// int		ret;
 
 	while (true)
 	{
 		line = get_next_line(0);
 		if (!line.raw)
-			return;
+			return ;
 		if (!line.size)
 		{
 			free(line.raw);
-			continue;
+			continue ;
 		}
 		result = hashmap_get_value(hashmap, line);
 		if (!result.raw)
-			print_buf(line, false);//ret = snprintf(buffer, 100, "%s: not found\n", line.raw);
-			// printf("%s: not found\n", line.raw);
+			print_buf(line, false);
 		else
-			print_buf(result, true);// printf("%s: %s\n", line.raw, result);
-			//ret = snprintf(buffer, 100, "%s: %s\n", line.raw, result);
-		// write(1, buffer, ret);
+			print_buf(result, true);
 	}
 }
 
