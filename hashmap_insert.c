@@ -6,7 +6,7 @@
 /*   By: bgebetsb <bgebetsb@student.42vienna.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/13 20:38:51 by bgebetsb          #+#    #+#             */
-/*   Updated: 2025/04/13 21:25:38 by bgebetsb         ###   ########.fr       */
+/*   Updated: 2025/04/13 21:45:56 by bgebetsb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ bool	hashmap_insert(t_hashmap *hashmap, t_line key, t_line value)
 	hashmap_node = malloc(sizeof(t_tree));
 	if (!hashmap_node)
 		return (false);
-	block_memset((uint64_t *)hashmap_node, 0, 9);
+	block_memset((uint64_t *)hashmap_node, 0, 8);
 	main_hash = djb2a_hash(key.raw);
 	hashmap_node->main_hash = main_hash;
 	hashmap_node->key = key;
