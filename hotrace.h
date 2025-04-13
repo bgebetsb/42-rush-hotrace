@@ -17,7 +17,7 @@
 # include <stdbool.h>
 # include <stdint.h>
 
-# define HASHMAP_SIZE 262144
+# define HASHMAP_SIZE 1048576
 
 typedef struct s_line
 {

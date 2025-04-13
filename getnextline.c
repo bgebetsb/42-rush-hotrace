@@ -17,7 +17,7 @@
 #include "hotrace.h"
 
 #ifndef BUFFER_SIZE
-# define BUFFER_SIZE 1024
+# define BUFFER_SIZE 8192
 #endif
 
 #define EXPECTED_LINE_SIZE 64
