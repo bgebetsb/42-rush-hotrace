@@ -6,7 +6,7 @@
 /*   By: mhuszar <mhuszar@student.42vienna.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 21:42:19 by bgebetsb          #+#    #+#             */
-/*   Updated: 2025/04/12 18:53:15 by mhuszar          ###   ########.fr       */
+/*   Updated: 2025/04/13 19:36:23 by mhuszar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,13 @@ typedef struct s_hashmap
 	t_tree	*matches;
 	size_t	amount;
 }	t_hashmap;
+
+typedef struct gnl
+{
+	t_line		line;
+	int			len;
+	int			copy;
+}	t_gnl;
 
 void		ft_bzero(void *s, size_t n);
 void		*ft_calloc(size_t nmemb, size_t size);
