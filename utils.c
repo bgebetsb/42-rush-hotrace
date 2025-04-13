@@ -6,7 +6,7 @@
 /*   By: mhuszar <mhuszar@student.42vienna.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 21:42:27 by bgebetsb          #+#    #+#             */
-/*   Updated: 2025/04/13 12:58:43 by mhuszar          ###   ########.fr       */
+/*   Updated: 2025/04/13 20:01:38 by mhuszar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,17 @@ void	__attribute__ ((noinline))
         : "memory", "cc", "flags"
     );
     return (s);
+}
+
+void	__attribute__((noinline)) __attribute__((hot))
+	gnl_move(char *dest, char *src, size_t bytes)
+{
+	__asm__ volatile (
+		"cld; rep movsb"
+		:
+		: "S"(src), "D"(dest), "c"(bytes)
+		: "memory", "cc", "flags"
+	);
 }
 
 void	*ft_calloc(size_t nmemb, size_t size)

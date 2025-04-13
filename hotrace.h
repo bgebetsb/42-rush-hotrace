@@ -6,7 +6,7 @@
 /*   By: mhuszar <mhuszar@student.42vienna.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 21:42:19 by bgebetsb          #+#    #+#             */
-/*   Updated: 2025/04/13 19:36:23 by mhuszar          ###   ########.fr       */
+/*   Updated: 2025/04/13 20:02:03 by mhuszar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,7 @@ typedef struct gnl
 void		ft_bzero(void *s, size_t n);
 void		*ft_calloc(size_t nmemb, size_t size);
 void		*block_memset(uint64_t *s, size_t c, size_t n);
+void		gnl_move(char *dest, char *src, size_t bytes);
 
 uint32_t 	fnv1a_hash(const char* s);
 uint32_t	djb2a_hash(const char *s);
