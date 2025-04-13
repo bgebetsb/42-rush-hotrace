@@ -12,6 +12,7 @@
 
 #include "hotrace.h"
 #include <stdlib.h>
+#include <stdint.h>
 
 static void				insert_in_tree(t_tree **start, t_tree *node);
 static int				compare_nodes(t_tree *a, t_tree *b);

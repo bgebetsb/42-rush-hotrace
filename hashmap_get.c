@@ -11,11 +11,8 @@
 /* ************************************************************************** */
 
 #include "hotrace.h"
-#include <limits.h>
-#include <stdbool.h>
 #include <stdint.h>
 #include <stdlib.h>
-#include <sys/types.h>
 
 static uint32_t			djb2a_hash(const char *s);
 static t_line			tree_lookup_hash(t_tree *list, t_line key, size_t hash);

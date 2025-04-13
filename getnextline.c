@@ -10,9 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <fcntl.h>
 #include <stdint.h>
-#include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include "hotrace.h"
@@ -120,24 +118,3 @@ t_line	get_next_line(int fd)
 		return (free_and_null(&s.line.raw), s.line);
 	return (s.line.raw[s.len] = '\0', s.line.size = s.len, s.line);
 }
-
-// int	main(void)
-// {
-//     int		fd;
-//     t_line	line;
-
-//     fd = open("input.txt", O_RDONLY);
-//     if (fd < 0)
-//         return (1);
-
-// 	line = get_next_line(fd);
-//     while (line.raw)
-//     {
-//         printf("%s", line.raw);
-//         free(line.raw);
-// 		line = get_next_line(fd);
-//     }
-
-//     close(fd);
-//     return (0);
-// }
