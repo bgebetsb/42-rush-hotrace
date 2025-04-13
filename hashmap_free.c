@@ -6,7 +6,7 @@
 /*   By: bgebetsb <bgebetsb@student.42vienna.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/13 17:46:18 by bgebetsb          #+#    #+#             */
-/*   Updated: 2025/04/13 21:23:18 by bgebetsb         ###   ########.fr       */
+/*   Updated: 2025/04/13 21:59:34 by bgebetsb         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,13 +35,11 @@ static inline void	__attribute__((always_inline)) free_tree(t_tree **start)
 					cur->parent->right = NULL;
 			}
 			tmp = cur->parent;
-			free(cur->key.raw);
-			free(cur->value.raw);
+			(free(cur->key.raw), free(cur->value.raw));
 			free(cur);
 			cur = tmp;
 		}
 	}
-	*start = NULL;
 }
 
 void	free_hashmap(t_hashmap **hashmap)
