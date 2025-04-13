@@ -63,37 +63,77 @@ static void	insert_at_pos(t_hashmap *hashmap, t_tree *node, size_t pos)
 
 static void	insert_in_tree(t_tree **start, t_tree *node)
 {
-	t_tree			**cur;
-	t_tree			*parent;
-	int				cmp_ret;
-	t_directions	direction;
+    int cmp_ret;
 
-	cur = start;
-	parent = NULL;
-	direction = LEFT;
-	while (*cur)
-	{
-		cmp_ret = compare_nodes(node, *cur);
-		if (cmp_ret == 0)
-		{
-    		(free((*cur)->key.raw), free((*cur)->value.raw), free(*cur));
-    		break;
-		}
-		parent = *cur;
-		if (cmp_ret < 0)
-		{
-			cur = (t_tree **)&((*cur)->left);
-			direction = LEFT;
-		}
-		else
-		{
-			cur = (t_tree **)&((*cur)->right);
-			direction = RIGHT;
-		}
-	}
-	node->parent = parent;
-	node->parent_direction = direction;
-	*cur = node;
+    if (!(*start))
+    {
+        *start = node;
+        return;
+    }
+    cmp_ret = compare_nodes(*start, node);
+    if (cmp_ret <= 0)
+    {
+        if ((*start)->left == NULL)
+        {
+            node->parent = (*start);
+            node->parent_direction = LEFT;
+            (*start)->left = node;
+        }
+        else
+        {
+            (*start)->parent = node;
+            (*start)->parent_direction = RIGHT;
+            node->right = *start;
+            *start = node;
+        }
+    }
+    else
+    {
+        if ((*start)->right == NULL)
+        {
+            node->parent = (*start);
+            node->parent_direction = RIGHT;
+            (*start)->right = node;
+        }
+        else
+        {
+            (*start)->parent = node;
+            (*start)->parent_direction = LEFT;
+            node->left = *start;
+            *start = node;
+        }
+    }
+	// t_tree			**cur;
+	// t_tree			*parent;
+	// int				cmp_ret;
+	// t_directions	direction;
+
+	// cur = start;
+	// parent = NULL;
+	// direction = LEFT;
+	// while (*cur)
+	// {
+	// 	cmp_ret = compare_nodes(node, *cur);
+	// 	if (cmp_ret == 0)
+	// 	{
+ //    		(free((*cur)->key.raw), free((*cur)->value.raw), free(*cur));
+ //    		break;
+	// 	}
+	// 	parent = *cur;
+	// 	if (cmp_ret < 0)
+	// 	{
+	// 		cur = (t_tree **)&((*cur)->left);
+	// 		direction = LEFT;
+	// 	}
+	// 	else
+	// 	{
+	// 		cur = (t_tree **)&((*cur)->right);
+	// 		direction = RIGHT;
+	// 	}
+	// }
+	// node->parent = parent;
+	// node->parent_direction = direction;
+	// *cur = node;
 }
 
 
