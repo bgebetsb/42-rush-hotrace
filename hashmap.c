@@ -27,7 +27,8 @@ bool	hashmap_insert(t_hashmap *hashmap, t_line key, t_line value)
 	size_t	main_hash;
 	t_tree	*hashmap_node;
 
-	main_hash = murmur3_hash(key.raw, key.size, 31);
+	// main_hash = murmur3_hash(key.raw, key.size, 31);
+	main_hash = djb2a_hash(key.raw);
 	hashmap_node = ft_calloc(1, sizeof(t_tree));
 	if (!hashmap_node)
 		return (false);
@@ -45,7 +46,8 @@ t_line	hashmap_get_value(t_hashmap *hashmap, t_line key)
 	t_line			ret;
 
 	// main_hash = fnv1a_hash(key.raw);
-	main_hash = murmur3_hash(key.raw, key.size, 31);
+	// main_hash = murmur3_hash(key.raw, key.size, 31);
+	main_hash = djb2a_hash(key.raw);
 	cur = hashmap + main_hash % HASHMAP_SIZE;
 	if (!cur->amount)
 		return (ret.raw = NULL, ret.size = 0, ret);
