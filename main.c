@@ -79,7 +79,7 @@ static inline void	__attribute__((always_inline)) __attribute__((hot))
 	else
 	{
 		write(1, str.raw, str.size);
-		write(1, ": Not found.\n", 14);
+		write(1, ": Not found.\n", 13);
 	}
 }
 
