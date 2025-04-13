@@ -6,7 +6,8 @@ CFLAGS	= -Wall -Wextra -Werror -g
 DEF_COLOR := \033[0;39m
 GREEN := \033[0;92m
 
-SRC	=	main.c getnextline.c hashing.c hashmap.c murmur.c utils.c
+SRC	=	main.c getnextline.c hashing.c murmur.c utils.c hashmap_free.c \
+		hashmap_get.c hashmap_insert.c
 
 OBJ =	$(SRC:.c=.o)
 
