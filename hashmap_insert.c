@@ -66,8 +66,11 @@ static void	insert_in_tree(t_tree **start, t_tree *node)
 		cmp_ret = compare_nodes(node, *cur);
 		if (cmp_ret == 0)
 		{
-			(free((*cur)->key.raw), free((*cur)->value.raw), free(*cur));
-			break ;
+			free(node->key.raw);
+			free((*cur)->value.raw);
+			(*cur)->value = node->value;
+			free(node);
+			return ;
 		}
 		parent = *cur;
 		if (cmp_ret < 0)
