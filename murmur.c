@@ -6,7 +6,7 @@
 /*   By: mhuszar <mhuszar@student.42vienna.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 21:39:40 by mhuszar           #+#    #+#             */
-/*   Updated: 2025/04/13 12:55:49 by mhuszar          ###   ########.fr       */
+/*   Updated: 2025/04/13 21:56:14 by mhuszar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ static inline uint32_t __attribute__ ((always_inline))
 	return (num);
 }
 
-void __attribute__ ((noinline)) move32(char *key, uint32_t *chunk)
+void __attribute__ ((noinline))	move32(char *key, uint32_t *chunk)
 {
 	__asm__ volatile (
 		"cld; rep movsb;"

@@ -3,20 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   hashmap_insert.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bgebetsb <bgebetsb@student.42vienna.com>   +#+  +:+       +#+        */
+/*   By: mhuszar <mhuszar@student.42vienna.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/13 20:38:51 by bgebetsb          #+#    #+#             */
-/*   Updated: 2025/04/13 21:45:56 by bgebetsb         ###   ########.fr       */
+/*   Updated: 2025/04/13 21:57:00 by mhuszar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "hotrace.h"
 #include <stdlib.h>
 
-static void		insert_in_tree(t_tree **start, t_tree *node);
-static int	compare_nodes(t_tree *a, t_tree *b);
+static void				insert_in_tree(t_tree **start, t_tree *node);
+static int				compare_nodes(t_tree *a, t_tree *b);
 
-static inline uint32_t	__attribute__((always_inline)) djb2a_hash(const char *s)
+static inline uint32_t	__attribute__((always_inline))
+	djb2a_hash(const char *s)
 {
 	uint32_t		hash;
 	unsigned char	c;
@@ -27,16 +28,16 @@ static inline uint32_t	__attribute__((always_inline)) djb2a_hash(const char *s)
 		c = *s++;
 		hash = ((hash << 5) + hash) ^ c;
 	}
-
 	return (hash);
 }
 
 bool	hashmap_insert(t_hashmap *hashmap, t_line key, t_line value)
 {
-	size_t	main_hash;
-	t_tree	*hashmap_node = NULL;
+	size_t		main_hash;
+	t_tree		*hashmap_node;
 	t_hashmap	*item;
 
+	hashmap_node = NULL;
 	hashmap_node = malloc(sizeof(t_tree));
 	if (!hashmap_node)
 		return (false);
@@ -53,9 +54,9 @@ bool	hashmap_insert(t_hashmap *hashmap, t_line key, t_line value)
 
 static void	insert_in_tree(t_tree **start, t_tree *node)
 {
-	t_tree			**cur;
-	t_tree			*parent;
-	int				cmp_ret;
+	t_tree	**cur;
+	t_tree	*parent;
+	int		cmp_ret;
 
 	cur = start;
 	parent = NULL;
@@ -64,8 +65,8 @@ static void	insert_in_tree(t_tree **start, t_tree *node)
 		cmp_ret = compare_nodes(node, *cur);
 		if (cmp_ret == 0)
 		{
-    		(free((*cur)->key.raw), free((*cur)->value.raw), free(*cur));
-    		break;
+			(free((*cur)->key.raw), free((*cur)->value.raw), free(*cur));
+			break ;
 		}
 		parent = *cur;
 		if (cmp_ret < 0)
@@ -77,7 +78,8 @@ static void	insert_in_tree(t_tree **start, t_tree *node)
 	*cur = node;
 }
 
-static inline int __attribute__((always_inline)) ft_strcmp(const char *s1, const char *s2)
+static inline int	__attribute__((always_inline))
+	ft_strcmp(const char *s1, const char *s2)
 {
 	while (*s1 == *s2)
 	{
@@ -89,7 +91,8 @@ static inline int __attribute__((always_inline)) ft_strcmp(const char *s1, const
 	return (*s1 - *s2);
 }
 
-static inline int __attribute__((always_inline)) compare_nodes(t_tree *a, t_tree *b)
+static inline int	__attribute__((always_inline))
+	compare_nodes(t_tree *a, t_tree *b)
 {
 	if (a->main_hash < b->main_hash)
 		return (-1);

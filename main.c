@@ -6,7 +6,7 @@
 /*   By: mhuszar <mhuszar@student.42vienna.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 18:34:57 by mhuszar           #+#    #+#             */
-/*   Updated: 2025/04/13 13:01:38 by mhuszar          ###   ########.fr       */
+/*   Updated: 2025/04/13 21:55:57 by mhuszar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,5 +120,4 @@ int	main(void)
 		return (free_hashmap(&hashmap), 1);
 	parse_searches(hashmap);
 	free_hashmap(&hashmap);
-	// TODO: free hashmap
 }

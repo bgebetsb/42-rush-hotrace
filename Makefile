@@ -1,6 +1,6 @@
 NAME =	hotrace
 CC	=	cc
-CFLAGS	= -Wall -Wextra -Werror -g
+CFLAGS	= -Wall -Wextra -Werror
 
 #Colors
 DEF_COLOR := \033[0;39m
