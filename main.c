@@ -6,7 +6,7 @@
 /*   By: mhuszar <mhuszar@student.42vienna.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 18:34:57 by mhuszar           #+#    #+#             */
-/*   Updated: 2025/04/12 19:08:42 by mhuszar          ###   ########.fr       */
+/*   Updated: 2025/04/13 13:01:38 by mhuszar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,14 +41,16 @@ static bool	parse_key_value_pairs(t_hashmap *hashmap)
 	}
 }
 
+/*this should not cause an issue, as src pointer is always a copy of the
+one stored in the tree here*/
 static inline void	__attribute__((always_inline)) __attribute__((hot))
 	move(uint8_t *src, uint8_t *dest, size_t bytes)
 {
 	__asm__ volatile (
-		"rep movsb"
+		"cld; rep movsb"
 		:
 		: "S"(src), "D"(dest), "c"(bytes)
-		: "memory"
+		: "memory", "cc", "flags"
 	);
 }
 

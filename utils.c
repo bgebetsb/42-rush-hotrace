@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bgebetsb <bgebetsb@student.42vienna.com>   +#+  +:+       +#+        */
+/*   By: mhuszar <mhuszar@student.42vienna.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 21:42:27 by bgebetsb          #+#    #+#             */
-/*   Updated: 2025/04/11 21:45:03 by bgebetsb         ###   ########.fr       */
+/*   Updated: 2025/04/13 12:58:43 by mhuszar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,14 +34,14 @@ void	ft_bzero(void *s, size_t n)
 	}
 }
 
-
-void    *block_memset(uint64_t *s, size_t c, size_t n)
+void	__attribute__ ((noinline))
+	*block_memset(uint64_t *s, size_t c, size_t n)
 {
     __asm__ volatile (
-        "rep stosq"
+        "cld; rep stosq"
         :
         : "c"(n), "D"(s), "a"(c)
-        : "memory"
+        : "memory", "cc", "flags"
     );
     return (s);
 }
