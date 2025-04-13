@@ -13,7 +13,7 @@ OBJ =	$(SRC:.c=.o)
 
 all: $(NAME)
 
-$(NAME): $(OBJ)
+$(NAME): $(OBJ) hotrace.h
 	$(CC) $(CFLAGS) -c $(SRC)
 	$(CC) $(CFLAGS) -o $(NAME) $(OBJ)
 	@echo "$(GREEN)Executable $(NAME) created!$(DEF_COLOR)"
