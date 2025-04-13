@@ -6,13 +6,12 @@
 /*   By: mhuszar <mhuszar@student.42vienna.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 18:34:57 by mhuszar           #+#    #+#             */
-/*   Updated: 2025/04/13 13:01:38 by mhuszar          ###   ########.fr       */
+/*   Updated: 2025/04/13 22:13:51 by mhuszar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "hotrace.h"
 #include <stdint.h>
-#include <stdio.h>
 #include <stdlib.h>
 #include <sys/types.h>
 #include <unistd.h>
@@ -120,5 +119,4 @@ int	main(void)
 		return (free_hashmap(&hashmap), 1);
 	parse_searches(hashmap);
 	free_hashmap(&hashmap);
-	// TODO: free hashmap
 }

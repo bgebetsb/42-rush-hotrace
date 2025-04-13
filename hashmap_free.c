@@ -3,17 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   hashmap_free.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bgebetsb <bgebetsb@student.42vienna.com>   +#+  +:+       +#+        */
+/*   By: mhuszar <mhuszar@student.42vienna.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/13 17:46:18 by bgebetsb          #+#    #+#             */
-/*   Updated: 2025/04/13 21:59:34 by bgebetsb         ###   ########.fr       */
+/*   Updated: 2025/04/13 22:12:03 by mhuszar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "hotrace.h"
 #include <stdlib.h>
 
-static inline void	__attribute__((always_inline)) free_tree(t_tree **start)
+static inline void	__attribute__((always_inline))
+	free_tree(t_tree **start)
 {
 	t_tree	*cur;
 	t_tree	*tmp;

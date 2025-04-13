@@ -6,7 +6,7 @@
 /*   By: mhuszar <mhuszar@student.42vienna.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 21:42:27 by bgebetsb          #+#    #+#             */
-/*   Updated: 2025/04/13 20:11:31 by bgebetsb         ###   ########.fr       */
+/*   Updated: 2025/04/13 21:55:42 by mhuszar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,13 +37,13 @@ void	ft_bzero(void *s, size_t n)
 void	__attribute__ ((noinline))
 	*block_memset(uint64_t *s, size_t c, size_t n)
 {
-    __asm__ volatile (
-        "cld; rep stosq"
-        :
-        : "c"(n), "D"(s), "a"(c)
-        : "memory", "cc", "flags"
-    );
-    return (s);
+	__asm__ volatile (
+		"cld; rep stosq"
+		:
+		: "c"(n), "D"(s), "a"(c)
+		: "memory", "cc", "flags"
+	);
+	return (s);
 }
 
 void	__attribute__((noinline)) __attribute__((hot))
