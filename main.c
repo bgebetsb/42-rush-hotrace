@@ -15,8 +15,8 @@
 #include <stdlib.h>
 #include <sys/types.h>
 #include <unistd.h>
-
-#define PRINTBUF_SIZE 2048
+#include <string.h>
+#include <errno.h>
 
 static bool	parse_key_value_pairs(t_hashmap *hashmap)
 {
@@ -27,14 +27,15 @@ static bool	parse_key_value_pairs(t_hashmap *hashmap)
 	{
 		key = get_next_line(0);
 		if (!key.raw)
-			return (false);
+			return (ft_putstr("Unexpected EOF"), false);
 		if (!key.size)
 			return (free(key.raw), true);
 		value = get_next_line(0);
 		if (!value.raw)
-			return (free(key.raw), false);
+			return (free(key.raw), ft_putstr("Unexpected EOF"), false);
 		if (!value.size)
-			return (free(key.raw), free(value.raw), true);
+			return (free(key.raw),
+				free(value.raw), ft_putstr("Unexpected empty line"), true);
 		if (!hashmap_insert(hashmap, key, value))
 			return (free(key.raw), free(value.raw), false);
 	}
@@ -113,7 +114,7 @@ int	main(void)
 
 	hashmap = malloc(HASHMAP_SIZE * sizeof(t_hashmap));
 	if (!hashmap)
-		return (1);
+		return (ft_putstr(strerror(errno)), 1);
 	block_memset((u_int64_t *)hashmap, 0, HASHMAP_SIZE << 1);
 	if (!parse_key_value_pairs(hashmap))
 		return (free_hashmap(&hashmap), 1);

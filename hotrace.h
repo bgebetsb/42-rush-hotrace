@@ -18,6 +18,7 @@
 # include <stdint.h>
 
 # define HASHMAP_SIZE 1048576
+# define PRINTBUF_SIZE 2048
 
 typedef struct s_line
 {
@@ -58,12 +59,8 @@ void				ft_bzero(void *s, size_t n);
 void				*ft_calloc(size_t nmemb, size_t size);
 void				*block_memset(uint64_t *s, size_t c, size_t n);
 void				gnl_move(char *dest, const char *src, size_t bytes);
+void				ft_putstr(const char *str);
 
-uint32_t			fnv1a_hash(const char *s);
-// uint32_t	djb2a_hash(const char *s);
-uint32_t			murmur3_hash(char *key, size_t len, uint32_t seed);
-
-t_hashmap			*create_hashmap(void);
 t_line				hashmap_get_value(t_hashmap *hashmap, t_line key);
 bool				hashmap_insert(t_hashmap *hashmap, t_line key,
 						t_line value);

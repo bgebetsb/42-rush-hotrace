@@ -13,6 +13,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <stddef.h>
+#include <unistd.h>
 
 void	ft_bzero(void *s, size_t n)
 {
@@ -78,4 +79,15 @@ void	*ft_calloc(size_t nmemb, size_t size)
 	}
 	ft_bzero(mem, total_size);
 	return (mem);
+}
+
+void	ft_putstr(const char *str)
+{
+	size_t	i;
+
+	i = 0;
+	while (str[i])
+		i++;
+	write(2, str, i);
+	write(2, "\n", 1);
 }
